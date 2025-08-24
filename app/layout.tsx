@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
+import MainHeader from "@/components/main-header";
 
 export const metadata: Metadata = {
     title: 'NextJS Course App',
@@ -34,6 +35,8 @@ export default function RootLayout({
               ></path>
           </svg>
       </div>
+
+      <MainHeader/>
 
       {children}
       </body>
