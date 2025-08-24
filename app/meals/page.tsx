@@ -1,12 +1,11 @@
 import React from 'react';
 
-const AboutPage = () => {
+const MealPage = () => {
     return (
         <main>
-            <h1>About Us</h1>
+            Hello World!
         </main>
-
     );
 };
 
-export default AboutPage;
+export default MealPage;
