@@ -7,12 +7,28 @@ import fs from 'node:fs';
 import {saveMeal} from "@/lib/meals";
 import {redirect} from "next/navigation";
 
+function isInvalidText(text: string|undefined) {
+    return !text || text.trim() === '';
+}
+
 export async function shareMeal(formData: FormData) {
     const title = formData.get('title') as string;
-    const slug = slugify(title, {lower: true});
     const instructions = xss(formData.get('instructions') as string);
-
+    const creator = formData.get('creator') as string;
+    const creatorEmail = formData.get('creator_email') as string;
+    const summary = formData.get('summary') as string;
     const image =  formData.get('image') as File;
+
+    if (isInvalidText(title) || isInvalidText(instructions)
+        || isInvalidText(summary)
+        || isInvalidText(creator)
+        || isInvalidText(creatorEmail)) {
+        throw new Error('Invalid input');
+    }
+
+    const slug = slugify(title, {lower: true});
+
+
     const extension = image.name.split(".").pop();
     const fileName = `${slug}.${extension}.${extension}`;
 
@@ -25,12 +41,12 @@ export async function shareMeal(formData: FormData) {
     });
 
     const meal: Meals = {
-        creator: formData.get('creator') as string,
-        creator_email: formData.get('creator_email') as string,
+        creator: creator,
+        creator_email: creatorEmail,
         image: `/images/${fileName}`,
         instructions: instructions,
         slug: slug,
-        summary: formData.get('summary') as string,
+        summary: summary,
         title: title
 
     }
