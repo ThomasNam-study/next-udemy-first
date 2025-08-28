@@ -6,12 +6,13 @@ import xss from "xss";
 import fs from 'node:fs';
 import {saveMeal} from "@/lib/meals";
 import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 
 function isInvalidText(text: string|undefined) {
     return !text || text.trim() === '';
 }
 
-export async function shareMeal(formData: FormData) {
+export async function shareMeal(prevState: {message?: string|undefined}, formData: FormData) {
     const title = formData.get('title') as string;
     const instructions = xss(formData.get('instructions') as string);
     const creator = formData.get('creator') as string;
@@ -23,7 +24,10 @@ export async function shareMeal(formData: FormData) {
         || isInvalidText(summary)
         || isInvalidText(creator)
         || isInvalidText(creatorEmail)) {
-        throw new Error('Invalid input');
+        // throw new Error('Invalid input');
+        return {
+            message: 'Invalid input',
+        }
     }
 
     const slug = slugify(title, {lower: true});
@@ -51,9 +55,7 @@ export async function shareMeal(formData: FormData) {
 
     }
 
-    console.log(meal);
-
     await saveMeal(meal);
-
+    revalidatePath('/meals', 'page');
     redirect('/meals');
 }

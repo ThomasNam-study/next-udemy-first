@@ -6,6 +6,12 @@ import MealsGrid from "@/components/meals/meals-grid";
 import {getMeals} from "@/lib/meals";
 import {Meals} from "@/model/modals/meals-type";
 import MealsLoadingPage from "@/app/meals/loading-out";
+import type {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: 'All Meals',
+    description: 'Delicious meals, sared by a food-loving community',
+}
 
 const MealsInnerPage = async () => {
     const meals = (await getMeals()) as Meals[];
@@ -14,6 +20,8 @@ const MealsInnerPage = async () => {
         <MealsGrid meals={meals}/>
     );
 };
+
+
 
 const MealsPage = () => {
 

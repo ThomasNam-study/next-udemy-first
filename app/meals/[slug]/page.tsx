@@ -5,8 +5,21 @@ import classes from './page.module.css';
 import {getMeal} from "@/lib/meals";
 import {Meals} from "@/model/modals/meals-type";
 import {notFound} from "next/navigation";
+import {Metadata} from "next";
 
 type Prop = { params: { slug: string } }
+
+export async function generateMetadata({params}: Prop): Promise<Metadata> {
+    const meal = (getMeal(params.slug)) as Meals|undefined;
+    if (!meal) {
+        notFound();
+    }
+
+    return {
+        title: meal?.title ?? "",
+        description: meal?.summary ?? "",
+    };
+}
 
 const MealDetailPage = ({params}: Prop) => {
     // const meal = (await getMeal(params.slug)) as Meals;
